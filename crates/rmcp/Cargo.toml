@@ -18,6 +18,7 @@ serde_json = "1.0"
 thiserror = "2"
 chrono = { version = "0.4.38", features = ["serde"] }
 tokio = { version = "1", features = ["sync", "macros", "rt", "time"] }
+process-wrap = { version = "8.2", features = ["tokio1"] }
 futures = "0.3"
 tracing = { version = "0.1" }
 tokio-util = { version = "0.7" }
