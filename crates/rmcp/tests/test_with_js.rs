@@ -53,9 +53,9 @@ async fn test_with_js_server() -> anyhow::Result<()> {
         .spawn()?
         .wait()
         .await?;
-    let transport = TokioChildProcess::new(
-        tokio::process::Command::new("node").arg("tests/test_with_js/server.js"),
-    )?;
+    let mut cmd = tokio::process::Command::new("node");
+    cmd.arg("tests/test_with_js/server.js");
+    let transport = TokioChildProcess::new(cmd)?;
 
     let client = ().serve(transport).await?;
     let resources = client.list_all_resources().await?;

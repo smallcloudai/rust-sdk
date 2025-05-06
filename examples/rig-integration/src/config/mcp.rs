@@ -69,12 +69,11 @@ impl McpServerTransportConfig {
                 args,
                 envs,
             } => {
-                let transport = rmcp::transport::TokioChildProcess::new(
-                    tokio::process::Command::new(command)
-                        .args(args)
-                        .envs(envs)
-                        .stderr(Stdio::null()),
-                )?;
+                let mut cmd = tokio::process::Command::new(command);
+                cmd.args(args);
+                cmd.envs(envs);
+                cmd.stderr(Stdio::null());
+                let transport = rmcp::transport::TokioChildProcess::new(cmd)?;
                 ().serve(transport).await?
             }
         };

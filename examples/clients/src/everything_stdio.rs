@@ -20,13 +20,10 @@ async fn main() -> Result<()> {
         .init();
 
     // Start server
-    let service = ()
-        .serve(TokioChildProcess::new(
-            Command::new("npx")
-                .arg("-y")
-                .arg("@modelcontextprotocol/server-everything"),
-        )?)
-        .await?;
+    let mut cmd = Command::new("npx");
+    cmd.arg("-y");
+    cmd.arg("@modelcontextprotocol/server-everything");
+    let service = ().serve(TokioChildProcess::new(cmd)?).await?;
 
     // Initialize
     let server_info = service.peer_info();

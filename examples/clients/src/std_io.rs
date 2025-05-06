@@ -13,11 +13,9 @@ async fn main() -> Result<()> {
         )
         .with(tracing_subscriber::fmt::layer())
         .init();
-    let service = ()
-        .serve(TokioChildProcess::new(
-            Command::new("uvx").arg("mcp-server-git"),
-        )?)
-        .await?;
+    let mut cmd = Command::new("uvx");
+    cmd.arg("mcp-server-git");
+    let service = ().serve(TokioChildProcess::new(cmd)?).await?;
 
     // or
     // serve_client(

@@ -18,12 +18,9 @@ async fn main() -> Result<()> {
 
     let mut client_list = HashMap::new();
     for idx in 0..10 {
-        let service = ()
-            .into_dyn()
-            .serve(TokioChildProcess::new(
-                Command::new("uvx").arg("mcp-server-git"),
-            )?)
-            .await?;
+        let mut cmd = Command::new("uvx");
+        cmd.arg("mcp-client-git");
+        let service = ().into_dyn().serve(TokioChildProcess::new(cmd)?).await?;
         client_list.insert(idx, service);
     }
 
