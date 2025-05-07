@@ -22,7 +22,7 @@ rmcp = { git = "https://github.com/modelcontextprotocol/rust-sdk", branch = "mai
 
 ### Quick start
 
-Start a client in one line:
+Start a client:
 
 ```rust, ignore
 use rmcp::{ServiceExt, transport::TokioChildProcess};
@@ -30,9 +30,9 @@ use tokio::process::Command;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = ().serve(
-        TokioChildProcess::new(Command::new("npx").arg("-y").arg("@modelcontextprotocol/server-everything"))?
-    ).await?;
+    let mut cmd = Command::new("npx");
+    cmd.arg("-y").arg("@modelcontextprotocol/server-everything");
+    let client = ().serve(TokioChildProcess::new(cmd)?).await?;
     Ok(())
 }
 ```
@@ -86,7 +86,7 @@ let server = service.serve(transport).await?;
 Once the server is initialized, you can send requests or notifications:
 
 ```rust, ignore
-// request 
+// request
 let roots = server.list_roots().await?;
 
 // or send notification

@@ -17,12 +17,7 @@ async fn main() -> Result<()> {
     cmd.arg("mcp-server-git");
     let service = ().serve(TokioChildProcess::new(cmd)?).await?;
 
-    // or
-    // serve_client(
-    //     (),
-    //     TokioChildProcess::new(Command::new("uvx").arg("mcp-server-git"))?,
-    // )
-    // .await?;
+    // or serve_client((), TokioChildProcess::new(cmd)?).await?;
 
     // Initialize
     let server_info = service.peer_info();

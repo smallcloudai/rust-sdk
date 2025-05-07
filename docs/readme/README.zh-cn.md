@@ -20,9 +20,9 @@ rmcp = { git = "https://github.com/modelcontextprotocol/rust-sdk", branch = "mai
 use rmcp::{ServiceExt, transport::TokioChildProcess};
 use tokio::process::Command;
 
-let client = ().serve(
-    TokioChildProcess::new(Command::new("npx").arg("-y").arg("@modelcontextprotocol/server-everything"))?
-).await?;
+let mut cmd = Command::new("npx");
+cmd.arg("-y").arg("@modelcontextprotocol/server-everything");
+let client = ().serve(TokioChildProcess::new(cmd)?).await?;
 ```
 
 #### 1. 构建传输层
@@ -63,7 +63,7 @@ let server = service.serve(transport).await?;
 一旦服务初始化完成，你可以发送请求或通知：
 
 ```rust, ignore
-// 请求 
+// 请求
 let roots = server.list_roots().await?;
 
 // 或发送通知
