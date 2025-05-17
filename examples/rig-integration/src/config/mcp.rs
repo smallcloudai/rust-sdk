@@ -1,6 +1,6 @@
 use std::{collections::HashMap, process::Stdio};
 
-use rmcp::{RoleClient, ServiceExt, service::RunningService};
+use rmcp::{RoleClient, ServiceExt, service::RunningService, transport::ConfigureCommandExt};
 use serde::{Deserialize, Serialize};
 
 use crate::mcp_adaptor::McpManager;
@@ -69,9 +69,11 @@ impl McpServerTransportConfig {
                 args,
                 envs,
             } => {
-                let mut cmd = tokio::process::Command::new(command);
-                cmd.args(args).envs(envs).stderr(Stdio::null());
-                let transport = rmcp::transport::TokioChildProcess::new(cmd)?;
+                let transport = rmcp::transport::TokioChildProcess::new(
+                    tokio::process::Command::new(command).configure(|cmd| {
+                        cmd.args(args).envs(envs).stderr(Stdio::null());
+                    }),
+                )?;
                 ().serve(transport).await?
             }
         };

@@ -34,7 +34,9 @@ pub struct ChildWithCleanup {
 
 impl Drop for ChildWithCleanup {
     fn drop(&mut self) {
-        let _ = self.inner.start_kill();
+        if let Err(e) = self.inner.start_kill() {
+            tracing::warn!("Failed to kill child process: {e}");
+        }
     }
 }
 
@@ -101,5 +103,16 @@ impl<R: ServiceRole> IntoTransport<R, std::io::Error, ()> for TokioChildProcess 
         IntoTransport::<R, std::io::Error, super::io::TransportAdapterAsyncRW>::into_transport(
             self.split(),
         )
+    }
+}
+
+pub trait ConfigureCommandExt {
+    fn configure(self, f: impl FnOnce(&mut Self)) -> Self;
+}
+
+impl ConfigureCommandExt for tokio::process::Command {
+    fn configure(mut self, f: impl FnOnce(&mut Self)) -> Self {
+        f(&mut self);
+        self
     }
 }

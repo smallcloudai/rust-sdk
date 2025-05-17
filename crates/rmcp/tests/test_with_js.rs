@@ -1,6 +1,6 @@
 use rmcp::{
     ServiceExt,
-    transport::{SseServer, TokioChildProcess},
+    transport::{ConfigureCommandExt, SseServer, TokioChildProcess},
 };
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 mod common;
@@ -53,9 +53,10 @@ async fn test_with_js_server() -> anyhow::Result<()> {
         .spawn()?
         .wait()
         .await?;
-    let mut cmd = tokio::process::Command::new("node");
-    cmd.arg("tests/test_with_js/server.js");
-    let transport = TokioChildProcess::new(cmd)?;
+    let transport =
+        TokioChildProcess::new(tokio::process::Command::new("node").configure(|cmd| {
+            cmd.arg("tests/test_with_js/server.js");
+        }))?;
 
     let client = ().serve(transport).await?;
     let resources = client.list_all_resources().await?;

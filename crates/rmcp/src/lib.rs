@@ -60,9 +60,9 @@
 //! use tokio::process::Command;
 //!
 //! async fn client() -> Result<()> {
-//!     let mut cmd = Command::new("uvx");
-//!     cmd.arg("mcp-server-git");
-//!     let service = ().serve(TokioChildProcess::new(cmd)?).await?;
+//!     let service = ().serve(TokioChildProcess::new(Command::new("uvx").configure(|cmd| {
+//!         cmd.arg("mcp-server-git");
+//!     }))?).await?;
 //!
 //!     // Initialize
 //!     let server_info = service.peer_info();

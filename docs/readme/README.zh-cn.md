@@ -17,12 +17,12 @@ rmcp = { git = "https://github.com/modelcontextprotocol/rust-sdk", branch = "mai
 ### 快速上手
 一行代码启动客户端：
 ```rust
-use rmcp::{ServiceExt, transport::TokioChildProcess};
+use rmcp::{ServiceExt, transport::{TokioChildProcess, ConfigureCommandExt}};
 use tokio::process::Command;
 
-let mut cmd = Command::new("npx");
-cmd.arg("-y").arg("@modelcontextprotocol/server-everything");
-let client = ().serve(TokioChildProcess::new(cmd)?).await?;
+let client = ().serve(TokioChildProcess::new(Command::new("npx").configure(|cmd| {
+    cmd.arg("-y").arg("@modelcontextprotocol/server-everything");
+}))?).await?;
 ```
 
 #### 1. 构建传输层

@@ -25,14 +25,14 @@ rmcp = { git = "https://github.com/modelcontextprotocol/rust-sdk", branch = "mai
 Start a client:
 
 ```rust, ignore
-use rmcp::{ServiceExt, transport::TokioChildProcess};
+use rmcp::{ServiceExt, transport::{TokioChildProcess, ConfigureCommandExt}};
 use tokio::process::Command;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut cmd = Command::new("npx");
-    cmd.arg("-y").arg("@modelcontextprotocol/server-everything");
-    let client = ().serve(TokioChildProcess::new(cmd)?).await?;
+    let client = ().serve(TokioChildProcess::new(Command::new("npx").configure(|cmd| {
+        cmd.arg("-y").arg("@modelcontextprotocol/server-everything");
+    }))?).await?;
     Ok(())
 }
 ```
