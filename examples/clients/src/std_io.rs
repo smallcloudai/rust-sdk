@@ -25,7 +25,14 @@ async fn main() -> Result<()> {
         ))?)
         .await?;
 
-    // or serve_client((), TokioChildProcess::new(cmd)?).await?;
+    // or
+    // serve_client(
+    //     (),
+    //     TokioChildProcess::new(Command::new("uvx").configure(|cmd| {
+    //         cmd.arg("mcp-server-git");
+    //     }))?,
+    // )
+    // .await?;
 
     // Initialize
     let server_info = service.peer_info();
